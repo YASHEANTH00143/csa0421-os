@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX_REQUESTS 1000
+void sort(int array[], int n) {
+    int i, j, temp;
+    for (i = 0; i < n - 1; i++) {
+        for (j = i + 1; j < n; j++) {
+            if (array[i] > array[j]) {
+                temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+        }
+    }
+}
+int main() {
+    int requests[MAX_REQUESTS], n, head, total_movement = 0;
+    int i, j, index, end;
+    printf("Enter the number of requests: ");
+    scanf("%d", &n);
+    printf("Enter the requests:\n");
+    for (i = 0; i < n; i++) {
+        scanf("%d", &requests[i]);
+    }
+    printf("Enter the initial head position: ");
+    scanf("%d", &head);
+    printf("Enter the end cylinder: ");
+    scanf("%d", &end);
+    sort(requests, n);
+    printf("Order of traversal: ");
+    for (i = 0; i < n; i++) {
+        if (requests[i] >= head) {
+            index = i;
+            break;
+        }
+    }
+    if (i == n) {
+        index = 0;
+    }
+    for (i = index; i < n; i++) {
+        printf("%d ", head);
+        total_movement += abs(head - requests[i]);
+        head = requests[i];
+    }
+    printf("%d ", end);
+    total_movement += abs(head - end);
+    head = 0;
+    for (i = 0; i < index; i++) {
+        printf("%d ", head);
+        total_movement += abs(head - requests[i]);
+        head = requests[i];
+    }
+    printf("\nTotal head movement: %d\n", total_movement);
+    return 0;
+}
