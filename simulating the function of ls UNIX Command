@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <dirent.h>
+#include <sys/stat.h>
+int main(int argc, char *argv[]) {
+    struct dirent *dp;
+    DIR *dir;
+    struct stat filestat;
+    char *dirname = ".";
+    if (argc > 1) {
+        dirname = argv[1];
+    }
+    if ((dir = opendir(dirname)) == NULL) {
+        perror("opendir");
+        exit(1);
+    }
+    while ((dp = readdir(dir)) != NULL) {
+        char filename[256];
+        snprintf(filename, sizeof(filename), "%s/%s", dirname, dp->d_name);
+        if (stat(filename, &filestat) == -1) {
+            perror("stat");
+            continue;
+        }
+        printf("%s ", dp->d_name);
+        printf("%ld ", filestat.st_size);
+        printf("%lo ", (unsigned long) filestat.st_mode);
+        printf("%s", ctime(&filestat.st_mtime));
+    }
+    closedir(dir);
+    return 0;
+}
